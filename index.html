@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sheekha Mahapatro — Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    :root{
+      --bg: #f7f8fc;
+      --panel: #ffffff;
+      --text: #1b1f29;
+      --muted: #5e6a86;
+      --accent: linear-gradient(135deg,#8fd3fe,#cbb6ff 60%, #ffd1ff);
+      --glow: 0 0 32px rgba(156, 126, 255,.45);
+      --chip: rgba(140, 155, 255, .16);
+      --shadow: 0 10px 40px rgba(20,20,40,.08);
+      --border: rgba(0,0,0,.06);
+      --ring: rgba(120, 100, 255, .35);
+    }
+    [data-theme="dark"]{
+      --bg: #0d1117;
+      --panel: #0f1623;
+      --text: #e6edf3;
+      --muted: #9aa7b3;
+      --accent: linear-gradient(135deg,#9cc9ff,#7a7cff 60%, #ffa9fb);
+      --glow: 0 0 42px rgba(124, 112, 255,.55);
+      --chip: rgba(124, 112, 255, .12);
+      --shadow: 0 14px 50px rgba(0,0,0,.35);
+      --border: rgba(255,255,255,.06);
+      --ring: rgba(162, 148, 255, .45);
+    }
+    html, body { background: var(--bg); color: var(--text); scroll-behavior: smooth; }
+    .navbar { background: rgba(255,255,255,.35); backdrop-filter: blur(10px); border-bottom:1px solid var(--border); }
+    [data-theme="dark"] .navbar { background: rgba(15,22,35,.55); }
+    .btn-accent {
+      background-image: var(--accent);
+      color: #10121a;
+      border: none;
+      box-shadow: var(--glow);
+    }
+    .btn-accent:hover { filter: brightness(1.05); }
+    .chip {
+      display:inline-flex; align-items:center; gap:.5rem;
+      padding:.4rem .7rem; border-radius:999px; background:var(--chip); border:1px solid var(--border); font-size:.9rem;
+    }
+
+    /* HERO */
+    #hero { position: relative; min-height: 92vh; display:flex; align-items:center; }
+    .hero-wrap { width:100%; display:grid; grid-template-columns: 1.1fr .9fr; gap: 2rem; }
+    @media (max-width: 992px){ .hero-wrap { grid-template-columns:1fr; padding-top:5rem; } }
+    .headline {
+      font-size: clamp(2.2rem, 2.2rem + 3.2vw, 5rem);
+      line-height: 1.05; letter-spacing:.5px;
+      text-shadow: 0 0 0 rgba(0,0,0,0);
+      background: var(--accent);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 6px 28px rgba(140,120,255,.25));
+    }
+    .subhead { font-size: 1.05rem; color: var(--muted); }
+
+    .avatar-card {
+      background: var(--panel); border:1px solid var(--border); border-radius: 20px; box-shadow: var(--shadow);
+      padding:1.25rem; display:flex; gap:1rem; align-items:center;
+    }
+    .avatar {
+      width:88px; height:88px; border-radius: 24px; background: radial-gradient(120px 120px at 30% 30%, #cbd9ff, #9ad2ff, #cdb6ff);
+      display:grid; place-items:center; font-weight: 800; font-size:1.6rem; color:#10121a;
+      box-shadow: var(--glow);
+    }
+
+    .panel {
+      background: var(--panel); border:1px solid var(--border); border-radius: 22px; box-shadow: var(--shadow);
+      padding:1.4rem 1.4rem;
+    }
+    section { padding: 4rem 0; }
+
+    /* Parallax bits */
+    .decor { position: absolute; pointer-events:none; opacity:.9; filter: saturate(120%) blur(.2px); }
+    .decor.blob1 { top: 12vh; left: -40px; animation: floaty 18s ease-in-out infinite; }
+    .decor.blob2 { bottom: -30px; right: -20px; animation: floaty2 22s ease-in-out infinite; }
+    @keyframes floaty { 0%{ transform: translateY(0px) } 50%{ transform: translateY(-18px) } 100%{ transform: translateY(0px) } }
+    @keyframes floaty2 { 0%{ transform: translateY(0px) } 50%{ transform: translateY(24px) } 100%{ transform: translateY(0px) } }
+
+    /* Sections */
+    .section-title { font-weight:800; font-size:1.8rem; margin-bottom:1rem; }
+    .skill-chip { margin:.3rem; }
+    .timeline { border-left:2px dashed var(--border); padding-left:1rem; }
+    .timeline .item { position: relative; padding-left:.6rem; margin-bottom:1rem; }
+    .timeline .item::before {
+      content:""; position:absolute; left:-1.1rem; top:.35rem; width:10px; height:10px; border-radius:50%;
+      background:linear-gradient(135deg,#8fd3fe,#cbb6ff); box-shadow: 0 0 0 5px var(--chip);
+    }
+    .card.project { border:1px solid var(--border); border-radius:18px; overflow:hidden; }
+    .card.project .card-header { background: transparent; border-bottom:1px solid var(--border); }
+
+    .footer { border-top:1px solid var(--border); padding:2rem 0; color:var(--muted); }
+
+    /* Scroll reveal starting state */
+    .reveal { opacity: 0; transform: translateY(14px); transition:.6s ease; }
+    .reveal.visible { opacity:1; transform: translateY(0); }
+
+    /* Subtle background hue shift on scroll */
+    .bg-shift { transition: background 800ms ease; }
+  </style>
+</head>
+<body class="bg-shift">
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">SM<span class="text-muted">|Portfolio</span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ms-auto me-3">
+          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
+          <li class="nav-item"><a class="nav-link" href="#experience">Experience</a></li>
+          <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
+          <li class="nav-item"><a class="nav-link" href="#education">Education</a></li>
+          <li class="nav-item"><a class="nav-link" href="#certs">Certifications</a></li>
+          <li class="nav-item"><a class="nav-link" href="#achievements">Achievements</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+        <button id="themeToggle" class="btn btn-sm btn-accent rounded-pill">
+          <i class="bi bi-brightness-high-fill"></i> <span class="ms-1">Theme</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <section id="hero" class="container position-relative">
+    <img src="public/assets/blob1.svg" class="decor blob1" alt="decor blob" />
+    <img src="public/assets/blob2.svg" class="decor blob2" alt="decor blob" />
+    <div class="hero-wrap">
+      <div class="d-flex flex-column justify-content-center">
+        <div class="chip mb-3"><i class="bi bi-stars"></i><span>Full-Stack Developer</span></div>
+        <h1 class="headline">Hi, I'm Sheekha Mahapatro</h1>
+        <p class="subhead">
+          <span id="typed"></span>
+        </p>
+        <div class="d-flex gap-2 mt-3">
+          <a class="btn btn-accent rounded-pill px-4" href="#projects"><i class="bi bi-rocket-takeoff"></i> Explore Projects</a>
+          <a class="btn btn-outline-secondary rounded-pill px-4" href="#contact"><i class="bi bi-envelope"></i> Contact</a>
+        </div>
+        <div class="d-flex align-items-center gap-3 mt-4">
+          <a href="mailto:Sheekhamahapatro.sm@gmail.com" class="text-decoration-none chip"><i class="bi bi-envelope-fill"></i> Sheekhamahapatro.sm@gmail.com</a>
+          <a href="tel:+918700650140" class="text-decoration-none chip"><i class="bi bi-telephone-fill"></i> +91 8700650140</a>
+        </div>
+        <div class="d-flex align-items-center gap-3 mt-2">
+          <a href="https://www.linkedin.com/in/sheekha-mahapatro-72a7191b5/" target="_blank" class="text-decoration-none chip"><i class="bi bi-linkedin"></i> LinkedIn</a>
+          <a href="https://github.com/Sheekhamahapatro" target="_blank" class="text-decoration-none chip"><i class="bi bi-github"></i> GitHub</a>
+        </div>
+      </div>
+      <div class="d-flex align-items-center justify-content-center">
+        <div class="avatar-card" data-tilt data-tilt-max="12" data-tilt-glare="true" data-tilt-scale="1.02">
+          <div class="avatar">SM</div>
+          <div>
+            <div class="fw-bold">Open to Opportunities</div>
+            <div class="text-muted small">Noida, India · Remote friendly</div>
+            <div class="small mt-1">Building scalable, real-world web apps.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+    <section id="about" class="reveal">
+      <div class="panel">
+        <div class="section-title">About</div>
+        <p>Trained Full Stack Developer with hands-on project and internship experience, skilled in building scalable, real-world web applications using modern tech stacks and structured industry practices. I translate ideas into polished products with performance, accessibility, and delightful UX at the core.</p>
+      </div>
+    </section>
+
+    <section id="skills" class="reveal">
+      <div class="panel">
+        <div class="section-title">Skills</div>
+        <div>
+          <span class="chip skill-chip"><i class="bi bi-code-slash"></i> JavaScript</span>
+          <span class="chip skill-chip"><i class="bi bi-filetype-html"></i> HTML/CSS</span>
+          <span class="chip skill-chip"><i class="bi bi-bootstrap-fill"></i> Bootstrap</span>
+          <span class="chip skill-chip"><i class="bi bi-git"></i> Git</span>
+          <span class="chip skill-chip"><i class="bi bi-server"></i> Node.js</span>
+          <span class="chip skill-chip"><i class="bi bi-database"></i> SQL</span>
+          <span class="chip skill-chip"><i class="bi bi-braces"></i> React</span>
+          <span class="chip skill-chip"><i class="bi bi-filetype-py"></i> Python</span>
+          <span class="chip skill-chip"><i class="bi bi-filetype-php"></i> PHP</span>
+          <span class="chip skill-chip"><i class="bi bi-journal-code"></i> jQuery</span>
+          <span class="chip skill-chip"><i class="bi bi-plugin"></i> Tailwind</span>
+          <span class="chip skill-chip"><i class="bi bi-cpu"></i> C/C++</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="experience" class="reveal">
+      <div class="panel">
+        <div class="section-title">Experience</div>
+        <div class="timeline">
+          <div class="item">
+            <div class="d-flex justify-content-between">
+              <strong>Full-Stack Developer — Freelance</strong>
+              <span class="text-muted">Sep 2024 – Present · Noida, U.P</span>
+            </div>
+            <ul class="mb-2">
+              <li>Translated Figma designs into pixel-perfect, responsive web pages.</li>
+              <li>Delivered fast, interactive sites using HTML, CSS, JavaScript, React.js, and Python, improving engagement by 35%.</li>
+              <li>Automated data workflows with custom Python tools, reducing manual effort by 40%.</li>
+              <li>Optimized SEO and performance, boosting organic traffic by 60%.</li>
+            </ul>
+          </div>
+          <div class="item">
+            <div class="d-flex justify-content-between">
+              <strong>Web Development Intern — Orionix Systems Pvt. Ltd.</strong>
+              <span class="text-muted">Jan 2024 – Jul 2024 · Noida, U.P</span>
+            </div>
+            <ul class="mb-2">
+              <li>Built Python-based backend features, improving processing efficiency by 20%.</li>
+              <li>Improved responsiveness and UX; user engagement up by 25%.</li>
+              <li>Created 15+ responsive pages with HTML, CSS, jQuery, and JS; load time cut by 40%.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="reveal">
+      <div class="panel">
+        <div class="section-title d-flex align-items-center justify-content-between">
+          <span>Projects</span>
+          <small class="text-muted">Click a project to see details</small>
+        </div>
+        <div class="row g-3">
+          <!-- Project cards -->
+          <div class="col-md-6">
+            <div class="card project">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>Hunger Zero — P2P Food Sharing</strong>
+                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#projHunger">Details</button>
+              </div>
+              <div class="card-body">
+                <p class="mb-2">Peer-to-peer food sharing platform with radius-based matching and responsive UI.</p>
+                <span class="chip">PHP</span>
+                <span class="chip">MySQL</span>
+                <span class="chip">HTML/CSS/JS</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card project">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>HerShield — Safety & SOS</strong>
+                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#projHerShield">Details</button>
+              </div>
+              <div class="card-body">
+                <p class="mb-2">Live location sharing with radius alerts and secure backend services.</p>
+                <span class="chip">PHP</span>
+                <span class="chip">MySQL</span>
+                <span class="chip">HTML/CSS/JS</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card project">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>PDF Merger (PyQt6)</strong>
+                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#projPDF">Details</button>
+              </div>
+              <div class="card-body">
+                <p class="mb-2">Automated PDF processing tool; 70% time reduction for team workflows.</p>
+                <span class="chip">Python</span>
+                <span class="chip">PyMuPDF</span>
+                <span class="chip">PyQt6</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card project">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>Git-Fetch App</strong>
+                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#projGitFetch">Details</button>
+              </div>
+              <div class="card-body">
+                <p class="mb-2">GitHub API-powered profile viewer with error handling and fast search.</p>
+                <span class="chip">HTML/CSS/JS</span>
+                <span class="chip">GitHub API</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="education" class="reveal">
+      <div class="panel">
+        <div class="section-title">Education</div>
+        <ul class="mb-0">
+          <li><strong>MCA (Hons.)</strong> — Lovely Professional University, Phagwara (Graduated Jul 2024)</li>
+          <li><strong>BCA (Hons.)</strong> — Lovely Professional University, Phagwara (Graduated Jul 2022)</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="certs" class="reveal">
+      <div class="panel">
+        <div class="section-title">Certifications</div>
+        <ul class="mb-0">
+          <li>Introduction to Front-End Development — Meta (Coursera)</li>
+          <li>Responsive Web Design in Adobe XD — Google (Coursera)</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="achievements" class="reveal">
+      <div class="panel">
+        <div class="section-title">Achievements</div>
+        <ul class="mb-0">
+          <li>Certificate A in NCC for outstanding dedication and performance.</li>
+          <li>1st Runner Up in Face Painting at LPU's Youth Vibe.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="contact" class="reveal">
+      <div class="panel">
+        <div class="section-title">Contact</div>
+        <form id="contactForm" class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Name</label>
+            <input class="form-control" name="name" required />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" required />
+          </div>
+          <div class="col-12">
+            <label class="form-label">Message</label>
+            <textarea class="form-control" name="message" rows="4" required></textarea>
+          </div>
+          <div class="col-12 d-flex align-items-center gap-2">
+            <button class="btn btn-accent px-4" type="submit"><i class="bi bi-send-fill me-1"></i> Send</button>
+            <div id="contactStatus" class="small text-muted"></div>
+          </div>
+          <div class="col-12">
+            <small class="text-muted">Your message will be echoed by the server and logged server-side. Ready for Nodemailer/SES later.</small>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container d-flex flex-column flex-md-row justify-content-between">
+      <div>© <span id="year"></span> Sheekha Mahapatro</div>
+      <div class="d-flex gap-3">
+        <a href="https://www.linkedin.com/in/sheekha-mahapatro-72a7191b5/" target="_blank" class="text-decoration-none"><i class="bi bi-linkedin"></i> LinkedIn</a>
+        <a href="https://github.com/Sheekhamahapatro" target="_blank" class="text-decoration-none"><i class="bi bi-github"></i> GitHub</a>
+        <a href="mailto:Sheekhamahapatro.sm@gmail.com" class="text-decoration-none"><i class="bi bi-envelope"></i> Email</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Project Modals -->
+  <div class="modal fade" id="projHunger" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Hunger Zero — Peer-to-Peer Food Sharing</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ul>
+            <li>Reduced food waste by an estimated 35% via community sharing.</li>
+            <li>Radius-based filter increased local match efficiency by 40%.</li>
+            <li>Backend with PHP/MySQL; responsive frontend with HTML/CSS/JS.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="projHerShield" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">HerShield — Women's Safety & SOS</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ul>
+            <li>Instant live location sharing during emergencies.</li>
+            <li>Location-based alert system for trusted nearby users.</li>
+            <li>Secure backend with PHP/MySQL; responsive and accessible UI.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="projPDF" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">PDF Merger — Automation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ul>
+            <li>Automated PyQt6 tool reduced processing time by 70%.</li>
+            <li>Streamlined PDF manipulation with PyMuPDF; team productivity up 30%.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="projGitFetch" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Git-Fetch App — GitHub API</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ul>
+            <li>Fast GitHub user viewer with graceful error handling.</li>
+            <li>Improved search efficiency and streamlined data retrieval.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js"></script>
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <script>
+    // Year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Typewriter
+    const typed = new Typed("#typed", {
+      strings: [
+        "Instant hero with typewriter subtitle.",
+        "Glowing headline. Avatar tilt.",
+        "Parallax motion. Scroll reveal.",
+        "Holographic Light ↔ Dark Robotics."
+      ],
+      typeSpeed: 38,
+      backSpeed: 16,
+      backDelay: 950,
+      loop: true
+    });
+
+    // Theme toggle with persistence
+    const root = document.documentElement;
+    const savedTheme = localStorage.getItem("theme") || "light";
+    document.documentElement.setAttribute("data-theme", savedTheme);
+    $("#themeToggle").on("click", function(){
+      const cur = document.documentElement.getAttribute("data-theme");
+      const next = cur === "light" ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+    });
+
+    // Scroll reveal
+    const sr = ScrollReveal({ distance: "24px", duration: 700, easing: "ease-out", interval: 80 });
+    sr.reveal(".reveal", { beforeReveal: el => el.classList.add("visible") });
+
+    // Mouse parallax for decor and headline
+    const hero = document.getElementById("hero");
+    hero.addEventListener("mousemove", (e) => {
+      const r = hero.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      document.querySelectorAll(".decor").forEach((el, i) => {
+        const depth = (i+1) * 8;
+        el.style.transform = `translate(${x * depth}px, ${y * depth}px)`;
+      });
+    });
+    hero.addEventListener("mouseleave", () => {
+      document.querySelectorAll(".decor").forEach((el) => el.style.transform = "translate(0,0)");
+    });
+
+    // Subtle background shift on scroll
+    const body = document.body;
+    window.addEventListener("scroll", () => {
+      const p = Math.min(1, window.scrollY / 700);
+      body.style.background = `linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(100,0,255,${0.04 + p*0.06}) 100%), var(--bg)`;
+    }, { passive: true });
+
+    // Contact form -> Node backend
+    $("#contactForm").on("submit", async function(ev){
+      ev.preventDefault();
+      const status = $("#contactStatus").text("Sending...");
+      const payload = {
+        name: $(this).find("[name=name]").val(),
+        email: $(this).find("[name=email]").val(),
+        message: $(this).find("[name=message]").val()
+      };
+      try{
+        const res = await fetch("/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        status.text(`Server says: ${data.status} — echo: "${data.echo?.message}"`).css("color", "#28a745");
+        this.reset();
+      }catch(err){
+        status.text("Failed to send. Is the server running on the same origin?").css("color", "#dc3545");
+      }
+    });
+  </script>
+</body>
+</html>
